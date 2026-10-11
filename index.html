@@ -235,8 +235,9 @@ html.js:not(.rm) .go .code .ln{animation:type .7s steps(var(--len)) forwards;ani
 /* ---------- timeline ---------- */
 .path{padding-block:160px 80px}
 .tl{position:relative;margin-top:56px;padding-left:40px;display:flex;flex-direction:column;gap:44px}
-.tl::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:1px;background:var(--line)}
-.tl-fill{position:absolute;left:7px;top:6px;bottom:6px;width:1px;background:linear-gradient(var(--ice),var(--rose));transform-origin:top;transform:scaleY(var(--tp,1))}
+/* line runs from the first dot's center to the last dot's center; JS sets --tl-a/--tl-b from the real dot positions */
+.tl::before{content:"";position:absolute;left:8px;top:var(--tl-a,14.5px);bottom:var(--tl-b,14.5px);width:1px;background:var(--line)}
+.tl-fill{position:absolute;left:8px;top:var(--tl-a,14.5px);bottom:var(--tl-b,14.5px);width:1px;background:linear-gradient(var(--ice),var(--rose));transform-origin:top;transform:scaleY(var(--tp,1))}
 html.js:not(.rm) .tl-fill{transform:scaleY(var(--tp,0))}
 .tl-item{position:relative;display:grid;grid-template-columns:170px minmax(0,1fr);gap:8px 32px}
 .tl-item::before{content:"";position:absolute;left:-38px;top:8px;width:13px;height:13px;border-radius:50%;background:var(--ink);border:1px solid var(--ice);transition:background-color .4s,box-shadow .4s}
@@ -781,7 +782,10 @@ html.warp body{animation:shake .5s 2}
   var secIO=new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){ var id=en.target.id; navLinks.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+id)}) } }) },{rootMargin:'-45% 0px -50% 0px'});
   $$('main section[id]').forEach(function(s){secIO.observe(s)});
 
-  var tl=$('#tl'), tlItems=$$('.tl-item');
+  var tl=$('#tl'), tlItems=$$('.tl-item'), tlA=14.5, tlB=14.5;
+  // dot centers: each dot is 13px tall, 8px below its item's top
+  function sizeTl(){ var f=tlItems[0], l=tlItems[tlItems.length-1]; tlA=f.offsetTop+14.5; tlB=tl.offsetHeight-(l.offsetTop+14.5);
+    tl.style.setProperty('--tl-a',tlA+'px'); tl.style.setProperty('--tl-b',tlB+'px') }
   function onScroll(){
     var y=scrollY, H=innerHeight;
     vel+=y-lastY;
@@ -792,8 +796,8 @@ html.warp body{animation:shake .5s 2}
     if(pinOn){ var r=work.getBoundingClientRect(), span=work.offsetHeight-H, p=span>0?clamp(-r.top/span,0,1):0;
       track.style.transform='translate3d('+(-p*hExtra).toFixed(1)+'px,0,0)'; hbar.style.transform='scaleX('+p+')' }
     if(!reduce){
-      var tr=tl.getBoundingClientRect(), tp=clamp((H*.65-tr.top)/tr.height,0,1); tl.style.setProperty('--tp',tp.toFixed(3));
-      tlItems.forEach(function(it){ it.classList.toggle('lit',it.getBoundingClientRect().top<H*.65) });
+      var tr=tl.getBoundingClientRect(), lineTop=tr.top+tlA, lineLen=Math.max(1,tr.height-tlA-tlB), tp=clamp((H*.65-lineTop)/lineLen,0,1); tl.style.setProperty('--tp',tp.toFixed(3));
+      tlItems.forEach(function(it){ it.classList.toggle('lit',tr.top+it.offsetTop+14.5<=H*.65+1) });
       var ar=about.getBoundingClientRect(), ap=clamp((H*.8-ar.top)/(ar.height+H*.25),0,1), lit=Math.floor(ap*words.length*1.05);
       for(var i=0;i<words.length;i++)words[i].classList.toggle('lit',i<lit);
     } else { tlItems.forEach(function(it){it.classList.add('lit')}) }
@@ -832,7 +836,7 @@ html.warp body{animation:shake .5s 2}
   $('#ns').addEventListener('click',function(){ nsTaps++; clearTimeout(nsT); nsT=setTimeout(function(){nsTaps=0},1200); if(nsTaps>=3){nsTaps=0;warp()} else toast(nsTaps===1?'Pista: escríbelo con tu teclado… o toca dos veces más.':'Una más.') });
 
   /* ---------- init ---------- */
-  function onResize(){ sizeCanvas(); sizePin(); onScroll() }
+  function onResize(){ sizeCanvas(); sizePin(); sizeTl(); onScroll() }
   addEventListener('resize',onResize);
   if(d.fonts&&d.fonts.ready)d.fonts.ready.then(onResize);
   addEventListener('load',onResize);
