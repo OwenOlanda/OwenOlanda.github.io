@@ -142,6 +142,9 @@ html.js:not(.rm) .rv.in{opacity:1;transform:none}
 .intro-panel p{margin:0;color:var(--dim);max-width:36ch}
 .hint{font-family:var(--mono);font-size:13px;color:var(--ice);display:flex;align-items:center;gap:10px}
 .hint svg{width:22px;height:22px;animation:nudge 1.6s ease-in-out infinite}
+.hint{transition:color .3s,text-shadow .3s,transform .4s cubic-bezier(.2,.7,.2,1)}
+.work.arm .hint{color:var(--fg);text-shadow:0 0 18px rgba(143,180,255,.7);transform:translateX(6px)}
+.work.arm .hint svg{animation-duration:.8s}
 @keyframes nudge{50%{transform:translateX(8px)}}
 .card{--rx:0deg;--ry:0deg;--gx:50%;--gy:50%;position:relative;flex:0 0 clamp(320px,33vw,440px);background:rgba(10,15,30,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:22px;padding:28px;display:flex;flex-direction:column;gap:16px;transform:perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry));transition:transform .6s cubic-bezier(.2,.7,.2,1),border-color .3s;min-width:0}
 .card.tilt{transition:transform .1s linear,border-color .3s;border-color:rgba(143,180,255,.4)}
@@ -254,6 +257,11 @@ html.js:not(.rm) .tl-fill{transform:scaleY(var(--tp,0))}
 .mq:hover .chip{opacity:.35}
 .mq .chip:hover{opacity:1;color:var(--ink);background:var(--ice);border-color:var(--ice);transform:translateY(-3px)}
 .mq-copy{display:contents}
+html:not(.rm) .mq{touch-action:pan-y;-webkit-user-select:none;user-select:none;cursor:grab}
+html:not(.rm) .mq.drag{cursor:grabbing}
+.mq.drag .chip{opacity:1!important;pointer-events:none}
+.mq-label .drag-hint{color:var(--ice);margin-left:10px;opacity:.8}
+html.rm .drag-hint{display:none}
 html.rm .mq-track{flex-wrap:wrap;width:auto;padding-inline:var(--gut)}
 html.rm .mq-copy[aria-hidden]{display:none}
 html.rm .mq{-webkit-mask-image:none;mask-image:none}
@@ -510,12 +518,12 @@ html.warp body{animation:shake .5s 2}
       <h2 class="title rv" style="--d:.1s">Con lo que construyo.</h2>
     </div>
     <div class="mq-group">
-      <p class="mq-label">lenguajes</p>
-      <div class="mq" data-dir="-1"><div class="mq-track"><div class="mq-copy"><span class="chip">PHP</span><span class="chip">JavaScript</span><span class="chip">Python</span><span class="chip">SQL</span><span class="chip">C#</span><span class="chip">C/C++</span><span class="chip">Java</span><span class="chip">HTML</span><span class="chip">CSS</span></div></div></div>
+      <p class="mq-label">lenguajes<span class="drag-hint">· arrastra para moverlos</span></p>
+      <div class="mq" data-cursor="arrastra" data-dir="-1"><div class="mq-track"><div class="mq-copy"><span class="chip">PHP</span><span class="chip">JavaScript</span><span class="chip">Python</span><span class="chip">SQL</span><span class="chip">C#</span><span class="chip">C/C++</span><span class="chip">Java</span><span class="chip">HTML</span><span class="chip">CSS</span></div></div></div>
       <p class="mq-label">plataformas, datos y APIs</p>
-      <div class="mq" data-dir="1"><div class="mq-track"><div class="mq-copy"><span class="chip">Shopify (Liquid)</span><span class="chip">WHMCS</span><span class="chip">.NET Windows Forms</span><span class="chip">MySQL</span><span class="chip">SQL Server</span><span class="chip">MongoDB</span><span class="chip">REST</span><span class="chip">GraphQL</span><span class="chip">JSON</span></div></div></div>
+      <div class="mq" data-cursor="arrastra" data-dir="1"><div class="mq-track"><div class="mq-copy"><span class="chip">Shopify (Liquid)</span><span class="chip">WHMCS</span><span class="chip">.NET Windows Forms</span><span class="chip">MySQL</span><span class="chip">SQL Server</span><span class="chip">MongoDB</span><span class="chip">REST</span><span class="chip">GraphQL</span><span class="chip">JSON</span></div></div></div>
       <p class="mq-label">herramientas y prácticas</p>
-      <div class="mq" data-dir="-1"><div class="mq-track"><div class="mq-copy"><span class="chip">Git/GitHub</span><span class="chip">Google Tag Manager</span><span class="chip">GA4</span><span class="chip">Google Apps Script</span><span class="chip">Visual Studio</span><span class="chip">x64dbg</span><span class="chip">Ubuntu</span><span class="chip">Diseño responsivo</span><span class="chip">SEO técnico</span><span class="chip">Seguridad web</span><span class="chip">Documentación técnica</span></div></div></div>
+      <div class="mq" data-cursor="arrastra" data-dir="-1"><div class="mq-track"><div class="mq-copy"><span class="chip">Git/GitHub</span><span class="chip">Google Tag Manager</span><span class="chip">GA4</span><span class="chip">Google Apps Script</span><span class="chip">Visual Studio</span><span class="chip">x64dbg</span><span class="chip">Ubuntu</span><span class="chip">Diseño responsivo</span><span class="chip">SEO técnico</span><span class="chip">Seguridad web</span><span class="chip">Documentación técnica</span></div></div></div>
     </div>
     <div class="wrap">
       <div class="extras">
@@ -739,13 +747,15 @@ html.warp body{animation:shake .5s 2}
   });
 
   /* ---------- horizontal pinned gallery ---------- */
-  var work=$('#trabajo'), track=$('#track'), hbar=$('#hbar'), pinOn=false, hExtra=0;
+  var work=$('#trabajo'), track=$('#track'), hbar=$('#hbar'), pinOn=false, hExtra=0, hPre=0, hPost=0, hRun=0;
+  // pinned gallery = a pause on entry (it sticks but doesn't slide yet), a slower sideways run, and a pause on exit
+  var PRE=.45, POST=.35, SLOW=1.4;
   // how far the track must slide so the last card ends at the right gutter (measured from layout, not scrollWidth, which some browsers inflate)
   function measureExtra(){ var last=track.lastElementChild, pr=parseFloat(getComputedStyle(track).paddingRight)||0; return Math.max(0, Math.ceil(last.offsetLeft+last.offsetWidth+pr-track.offsetLeft-d.documentElement.clientWidth)) }
   function sizePin(){
     pinOn=innerWidth>=900&&!reduce&&innerHeight>=680;
     work.classList.toggle('pin',pinOn);
-    if(pinOn){ hExtra=measureExtra(); work.style.height=(hExtra+innerHeight)+'px' }
+    if(pinOn){ hExtra=measureExtra(); hPre=Math.round(innerHeight*PRE); hPost=Math.round(innerHeight*POST); hRun=Math.round(hExtra*SLOW); work.style.height=(hPre+hRun+hPost+innerHeight)+'px' }
     else { hExtra=0; work.style.height=''; track.style.transform='' }
   }
 
@@ -753,8 +763,19 @@ html.warp body{animation:shake .5s 2}
   var mqs=$$('.mq').map(function(m){
     var tr=m.querySelector('.mq-track'), copy=tr.querySelector('.mq-copy');
     if(!reduce){ var cl=copy.cloneNode(true); cl.setAttribute('aria-hidden','true'); tr.appendChild(cl); var cl2=copy.cloneNode(true); cl2.setAttribute('aria-hidden','true'); tr.appendChild(cl2) }
-    var o={el:tr,m:m,x:0,dir:+m.getAttribute('data-dir'),hover:false};
+    var o={el:tr,m:m,x:0,dir:+m.getAttribute('data-dir'),hover:false,drag:false,vx:0,lx:0,ly:0,id:null,lock:''};
     m.addEventListener('pointerenter',function(){o.hover=true}); m.addEventListener('pointerleave',function(){o.hover=false});
+    if(!reduce){
+      // drag with mouse or finger; touch only takes over once the gesture is clearly horizontal, so vertical page scroll still works
+      m.addEventListener('pointerdown',function(e){ if(e.button>0)return; o.id=e.pointerId; o.lx=e.clientX; o.ly=e.clientY; o.vx=0; o.lock=e.pointerType==='touch'?'':'x'; if(o.lock){o.drag=true;m.classList.add('drag');try{m.setPointerCapture(e.pointerId)}catch(_){}} });
+      m.addEventListener('pointermove',function(e){ if(e.pointerId!==o.id)return; var dx=e.clientX-o.lx, dy=e.clientY-o.ly;
+        if(!o.lock){ if(Math.abs(dx)+Math.abs(dy)<6)return; o.lock=Math.abs(dx)>Math.abs(dy)?'x':'y'; if(o.lock==='y'){o.id=null;return} o.drag=true; m.classList.add('drag'); try{m.setPointerCapture(e.pointerId)}catch(_){} }
+        o.x+=dx; o.vx=dx; o.lx=e.clientX; o.ly=e.clientY; if(e.cancelable)e.preventDefault() });
+      function up(e){ if(e.pointerId!==o.id)return; o.id=null; o.drag=false; m.classList.remove('drag') }
+      m.addEventListener('pointerup',up); m.addEventListener('pointercancel',up);
+      // horizontal wheel / trackpad swipe (or shift + wheel) also moves it
+      m.addEventListener('wheel',function(e){ var dx=e.deltaX||(e.shiftKey?e.deltaY:0); if(!dx)return; e.preventDefault(); o.x-=dx; o.vx=-dx*.25 },{passive:false});
+    }
     return o;
   });
 
@@ -768,7 +789,7 @@ html.warp body{animation:shake .5s 2}
   var cv=$('#fx'), ctx=cv.getContext('2d'), parts=[], dpr=1, COLORS=['#8FB4FF','#F2A1B5','#EEF2FA'];
   function sizeCanvas(){ dpr=Math.min(2,devicePixelRatio||1); cv.width=innerWidth*dpr; cv.height=innerHeight*dpr; cv.style.width=innerWidth+'px'; cv.style.height=innerHeight+'px'; ctx.setTransform(dpr,0,0,dpr,0,0) }
   function burst(x,y,n){ if(reduce)return; for(var i=0;i<n;i++){ var a=Math.random()*Math.PI*2, s=1.5+Math.random()*5; parts.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-1.5,l:1,r:1+Math.random()*2.2,c:COLORS[Math.random()*3|0]}) } }
-  d.addEventListener('pointerdown',function(e){ if(e.target.closest('input,.copy-mail,#donate'))return; burst(e.clientX,e.clientY,12) });
+  d.addEventListener('pointerdown',function(e){ if(e.target.closest('input,.copy-mail,#donate,.mq'))return; burst(e.clientX,e.clientY,12) });
 
   /* ---------- header, progress, active nav ---------- */
   var top=$('#top'), prog=$('.progress i'), lastY=scrollY, vel=0, navLinks=$$('.nav a');
@@ -789,7 +810,7 @@ html.warp body{animation:shake .5s 2}
     lastY=y;
     var max=d.documentElement.scrollHeight-H; prog.style.transform='scaleX('+(max>0?y/max:0)+')';
     root.style.setProperty('--sp',clamp(y/H,0,1).toFixed(3));
-    if(pinOn){ var r=work.getBoundingClientRect(), span=work.offsetHeight-H, p=span>0?clamp(-r.top/span,0,1):0;
+    if(pinOn){ var r=work.getBoundingClientRect(), p=hRun>0?clamp((-r.top-hPre)/hRun,0,1):0; work.classList.toggle('arm',-r.top>-H*.2&&-r.top<hPre);
       track.style.transform='translate3d('+(-p*hExtra).toFixed(1)+'px,0,0)'; hbar.style.transform='scaleX('+p+')' }
     if(!reduce){
       var tr=tl.getBoundingClientRect(), lineTop=tr.top+tlA, lineLen=Math.max(1,tr.height-tlA-tlB), tp=clamp((H*.65-lineTop)/lineLen,0,1); tl.style.setProperty('--tp',tp.toFixed(3));
@@ -816,14 +837,16 @@ html.warp body{animation:shake .5s 2}
     if(!reduce&&fine){ var br=$('#big').getBoundingClientRect(); if(br.top<innerHeight&&br.bottom>0){ for(var j=0;j<bigChars.length;j++){ var c=bigChars[j], cr=c.getBoundingClientRect(), ddx=mx-(cr.left+cr.width/2), ddy=my-(cr.top+cr.height/2), dd=Math.sqrt(ddx*ddx+ddy*ddy), k=clamp(1-dd/260,0,1); c.style.transform='translateY('+(-k*k*28).toFixed(1)+'px) rotate('+(ddx>0?-1:1)*k*6+'deg)' } } }
     // marquee
     vel*=.9; var boost=clamp(Math.abs(vel)*.12,0,14);
-    if(!reduce)mqs.forEach(function(o){ var w=(o.el.scrollWidth+12)/3; if(!w)return; o.x+=o.dir*(.6+boost)*(o.hover?.12:1); if(o.x<=-w)o.x+=w; if(o.x>0)o.x-=w; o.el.style.transform='translate3d('+o.x.toFixed(1)+'px,0,0)' });
+    if(!reduce)mqs.forEach(function(o){ var w=(o.el.offsetWidth+12)/3; if(!w)return;
+      if(!o.drag){ o.x+=o.vx; o.vx*=.94; if(Math.abs(o.vx)<.05)o.vx=0; o.x+=o.dir*(.6+boost)*(o.hover||Math.abs(o.vx)>.5?.12:1) }
+      while(o.x<=-w)o.x+=w; while(o.x>0)o.x-=w; o.el.style.transform='translate3d('+o.x.toFixed(1)+'px,0,0)' });
     // particles
     if(parts.length||cv._dirty){ ctx.clearRect(0,0,innerWidth,innerHeight); cv._dirty=parts.length>0;
       for(var p=parts.length-1;p>=0;p--){ var q2=parts[p]; q2.vx*=.96; q2.vy=q2.vy*.96+.12; q2.x+=q2.vx; q2.y+=q2.vy; q2.l-=.022; if(q2.l<=0){parts.splice(p,1);continue}
         ctx.globalAlpha=q2.l; ctx.fillStyle=q2.c; ctx.beginPath(); ctx.arc(q2.x,q2.y,q2.r*q2.l+.3,0,6.283); ctx.fill() } ctx.globalAlpha=1 }
     requestAnimationFrame(frame);
   }
-  $$('.mq').forEach(function(m,i){ var o=mqs[i]; if(o.dir>0)o.x=-(o.el.scrollWidth+12)/3 });
+  $$('.mq').forEach(function(m,i){ var o=mqs[i]; if(o.dir>0)o.x=-(o.el.offsetWidth+12)/3 });
 
   /* ---------- easter egg: type "never settle" ---------- */
   var buf='', nsTaps=0, nsT;
