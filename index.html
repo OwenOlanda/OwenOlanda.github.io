@@ -646,7 +646,7 @@ html.warp body{animation:shake .5s 2}
   addEventListener('pointermove',function(e){ if(e.pointerType==='touch')return; mx=e.clientX; my=e.clientY; moved=true },{passive:true});
 
   /* ---------- custom cursor ---------- */
-  var cur=$('.cursor'), dot=$('.c-dot'), ring=$('.c-ring'), lab=$('.c-label'), rx=mx, ry=my;
+  var cur=$('.cursor'), dot=$('.c-dot'), ring=$('.c-ring'), lab=$('.c-label'), rx=mx, ry=my, pressed=false, rs=1;
   if(fine&&!reduce){
     root.classList.add('has-cursor');
     d.addEventListener('pointerover',function(e){
@@ -658,8 +658,9 @@ html.warp body{animation:shake .5s 2}
     });
     d.addEventListener('mouseout',function(e){if(!e.relatedTarget)cur.classList.add('gone')});
     d.addEventListener('mouseover',function(){cur.classList.remove('gone')});
-    d.addEventListener('pointerdown',function(){ring.style.scale='.85'});
-    d.addEventListener('pointerup',function(){ring.style.scale=''});
+    d.addEventListener('pointerdown',function(){pressed=true});
+    d.addEventListener('pointerup',function(){pressed=false});
+    addEventListener('blur',function(){pressed=false});
   }
 
   /* ---------- magnetic buttons ---------- */
@@ -794,7 +795,7 @@ html.warp body{animation:shake .5s 2}
     // spotlight
     root.style.setProperty('--mx',mx+'px'); root.style.setProperty('--my',my+'px');
     // cursor
-    if(fine&&!reduce){ rx=lerp(rx,mx,.2); ry=lerp(ry,my,.2); dot.style.transform='translate('+mx+'px,'+my+'px)'; ring.style.transform='translate('+rx.toFixed(1)+'px,'+ry.toFixed(1)+'px)' }
+    if(fine&&!reduce){ rx=lerp(rx,mx,.2); ry=lerp(ry,my,.2); dot.style.transform='translate('+mx+'px,'+my+'px)'; rs=lerp(rs,pressed?.82:1,.3); ring.style.transform='translate('+rx.toFixed(1)+'px,'+ry.toFixed(1)+'px) scale('+rs.toFixed(3)+')' }
     // name letters breathe toward cursor
     if(!reduce&&moved&&heroEl.getBoundingClientRect().bottom>0){
       for(var i=0;i<nameChars.length;i++){ var s=nameChars[i], r=s.getBoundingClientRect(), dx=mx-(r.left+r.width/2), dy=my-(r.top+r.height/2), dist=Math.sqrt(dx*dx+dy*dy), t=clamp(1-dist/340,0,1), e=t*t*(3-2*t);
