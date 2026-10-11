@@ -99,7 +99,8 @@ html.js:not(.rm) .boot{display:block;position:fixed;inset:0;z-index:90}
 .role{font-family:var(--display);font-size:clamp(22px,3vw,34px);line-height:1.2;margin:0 0 18px;font-weight:450;letter-spacing:-.01em;color:var(--fg)}
 .rot{color:var(--ice);white-space:nowrap}
 .rot .glyph{color:var(--rose);font-family:var(--mono);line-height:0} /* line-height:0 keeps the mono glyphs from growing the line box while scrambling */
-@media (max-width:720px){.rot{display:block}} /* on phones the rotating phrase gets its own line, so the scramble never jumps between lines */
+.br-m{display:none}
+@media (max-width:720px){.br-m{display:inline}} /* on phones the rotating phrase starts its own line (caret stays with it), so the scramble never jumps between lines */
 .caret{display:inline-block;width:.08em;height:.9em;background:var(--rose);margin-left:4px;vertical-align:-.08em;animation:blink 1s steps(2) infinite}
 @keyframes blink{50%{opacity:0}}
 .summary{max-width:60ch;color:var(--dim);margin:0 0 34px;font-size:clamp(16px,1.4vw,18px)}
@@ -229,13 +230,13 @@ html.js:not(.rm) .go .code .ln{animation:type .7s steps(var(--len)) forwards;ani
 
 /* ---------- timeline ---------- */
 .path{padding-block:160px 80px}
-.tl{position:relative;margin-top:56px;padding-left:40px;display:flex;flex-direction:column;gap:44px}
+.tl{position:relative;left:var(--tl-dx,0px);margin-top:56px;padding-left:40px;display:flex;flex-direction:column;gap:44px}
 /* line runs from the first dot's center to the last dot's center; JS sets --tl-a/--tl-b from the real dot positions */
 .tl::before{content:"";position:absolute;left:8px;top:var(--tl-a,14.5px);bottom:var(--tl-b,14.5px);width:1px;background:var(--line)}
 .tl-fill{position:absolute;left:8px;top:var(--tl-a,14.5px);bottom:var(--tl-b,14.5px);width:1px;background:linear-gradient(var(--ice),var(--rose));transform-origin:top;transform:scaleY(var(--tp,1))}
 html.js:not(.rm) .tl-fill{transform:scaleY(var(--tp,0))}
 .tl-item{position:relative;display:grid;grid-template-columns:170px minmax(0,1fr);gap:8px 32px}
-.tl-item::before{content:"";position:absolute;left:-38px;top:8px;width:13px;height:13px;border-radius:50%;background:var(--ink);border:1px solid var(--ice);transition:background-color .4s,box-shadow .4s}
+.tl-item::before{content:"";box-sizing:border-box;position:absolute;left:-38px;top:8px;width:13px;height:13px;border-radius:50%;background:var(--ink);border:1px solid var(--ice);transition:background-color .4s,box-shadow .4s}
 .tl-item.lit::before{background:var(--ice);box-shadow:0 0 0 6px rgba(143,180,255,.15)}
 .tl-when{font-family:var(--mono);font-size:13px;color:var(--faint);padding-top:6px}
 .tl-item h3{font-family:var(--display);font-weight:600;font-size:clamp(22px,2.4vw,30px);line-height:1.15;letter-spacing:-.015em;margin:0 0 6px}
@@ -337,7 +338,7 @@ html.warp body{animation:shake .5s 2}
     <div class="wrap">
       <p class="eyebrow rv" style="--d:.05s">// desarrollador web y de software</p>
       <h1 class="name" aria-label="Owen Olanda"><span class="line" aria-hidden="true">Owen</span><span class="line" aria-hidden="true">Olanda</span></h1>
-      <p class="role rv" style="--d:.15s">Construyo <span class="rot" id="rot">sitios web</span><span class="caret" aria-hidden="true"></span></p>
+      <p class="role rv" style="--d:.15s">Construyo <br class="br-m"><span class="rot" id="rot">sitios web</span><span class="caret" aria-hidden="true"></span></p>
       <p class="summary rv" style="--d:.25s">Desarrollador web y de software con experiencia en sitios y blogs con PHP y MySQL, migraciones a Shopify con Python y herramientas internas. Enfocado en crear soluciones prácticas, seguras y bien documentadas para empresas.</p>
       <div class="ctas rv" style="--d:.35s">
         <a class="btn primary magnet" href="#trabajo" data-cursor="ver">Ver mi trabajo
@@ -776,7 +777,10 @@ html.warp body{animation:shake .5s 2}
 
   var tl=$('#tl'), tlItems=$$('.tl-item'), tlA=14.5, tlB=14.5;
   // dot centers: each dot is 13px tall, 8px below its item's top
-  function sizeTl(){ var f=tlItems[0], l=tlItems[tlItems.length-1]; tlA=f.offsetTop+14.5; tlB=tl.offsetHeight-(l.offsetTop+14.5);
+  function sizeTl(){
+    // snap the timeline to a whole device pixel: otherwise the 1px line snaps to a pixel while the round dots are drawn on the half pixel, and the line looks 1px off-center
+    tl.style.setProperty('--tl-dx','0px'); var dpr=devicePixelRatio||1, lx=tl.getBoundingClientRect().left*dpr; tl.style.setProperty('--tl-dx',((Math.round(lx)-lx)/dpr).toFixed(3)+'px');
+    var f=tlItems[0], l=tlItems[tlItems.length-1]; tlA=f.offsetTop+14.5; tlB=tl.offsetHeight-(l.offsetTop+14.5);
     tl.style.setProperty('--tl-a',tlA+'px'); tl.style.setProperty('--tl-b',tlB+'px') }
   function onScroll(){
     var y=scrollY, H=innerHeight;
