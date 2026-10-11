@@ -160,7 +160,7 @@ html.js:not(.rm) .rv.in{opacity:1;transform:none}
 .bar i{display:block;height:100%;width:100%;border-radius:inherit;background:var(--ice);transform-origin:0 50%}
 html.js:not(.rm) .mig .bar i{transform:scaleX(0);transition:transform 1.8s cubic-bezier(.3,.6,.2,1)}
 html.js:not(.rm) .mig .bar.b2 i{transition-delay:.35s}
-html.js:not(.rm) .go .mig .bar i{transform:scaleX(1)}
+html.js:not(.rm) .mig.go .bar i{transform:scaleX(1)}
 .mig-ok{font-family:var(--mono);font-size:13px;color:var(--rose);display:flex;align-items:center;gap:8px}
 html.js:not(.rm) .mig-ok{opacity:0;transform:translateY(6px);transition:opacity .5s 2.2s,transform .5s 2.2s}
 html.js:not(.rm) .go .mig-ok{opacity:1;transform:none}
@@ -736,12 +736,14 @@ html.warp body{animation:shake .5s 2}
   });
 
   /* ---------- horizontal pinned gallery ---------- */
-  var work=$('#trabajo'), track=$('#track'), hbar=$('#hbar'), pinOn=false;
+  var work=$('#trabajo'), track=$('#track'), hbar=$('#hbar'), pinOn=false, hExtra=0;
+  // how far the track must slide so the last card ends at the right gutter (measured from layout, not scrollWidth, which some browsers inflate)
+  function measureExtra(){ var last=track.lastElementChild, pr=parseFloat(getComputedStyle(track).paddingRight)||0; return Math.max(0, Math.ceil(last.offsetLeft+last.offsetWidth+pr-track.offsetLeft-d.documentElement.clientWidth)) }
   function sizePin(){
     pinOn=innerWidth>=900&&!reduce&&innerHeight>=680;
     work.classList.toggle('pin',pinOn);
-    if(pinOn){ var extra=Math.max(0,track.scrollWidth-innerWidth); work.style.height=(extra+innerHeight)+'px' }
-    else { work.style.height=''; track.style.transform='' }
+    if(pinOn){ hExtra=measureExtra(); work.style.height=(hExtra+innerHeight)+'px' }
+    else { hExtra=0; work.style.height=''; track.style.transform='' }
   }
 
   /* ---------- marquee ---------- */
@@ -779,7 +781,7 @@ html.warp body{animation:shake .5s 2}
     var max=d.documentElement.scrollHeight-H; prog.style.transform='scaleX('+(max>0?y/max:0)+')';
     root.style.setProperty('--sp',clamp(y/H,0,1).toFixed(3));
     if(pinOn){ var r=work.getBoundingClientRect(), span=work.offsetHeight-H, p=span>0?clamp(-r.top/span,0,1):0;
-      track.style.transform='translate3d('+(-p*Math.max(0,track.scrollWidth-innerWidth)).toFixed(1)+'px,0,0)'; hbar.style.transform='scaleX('+p+')' }
+      track.style.transform='translate3d('+(-p*hExtra).toFixed(1)+'px,0,0)'; hbar.style.transform='scaleX('+p+')' }
     if(!reduce){
       var tr=tl.getBoundingClientRect(), tp=clamp((H*.65-tr.top)/tr.height,0,1); tl.style.setProperty('--tp',tp.toFixed(3));
       tlItems.forEach(function(it){ it.classList.toggle('lit',it.getBoundingClientRect().top<H*.65) });
