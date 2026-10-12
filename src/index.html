@@ -73,6 +73,14 @@ html.has-cursor .cursor{display:block;position:fixed;inset:0;z-index:70;pointer-
 .nav a{font-family:var(--mono);font-size:13px;text-decoration:none;color:var(--dim);padding:10px 12px;border-radius:999px;transition:color .2s,background-color .2s;min-height:44px;display:inline-flex;align-items:center}
 .nav a:hover,.nav a.on{color:var(--fg);background:rgba(143,180,255,.1)}
 @media (max-width:720px){.nav a:not(.keep){display:none}}
+/* language switch */
+.lang{display:inline-flex;align-items:center;gap:2px;margin-left:6px;padding:4px;min-height:44px;border:0;background:none;cursor:pointer;font:inherit}
+.lang i{font-style:normal;font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--dim);padding:6px 9px;border-radius:999px;border:1px solid var(--line);transition:color .2s,background-color .2s,border-color .2s}
+.lang i:first-child{border-radius:999px 0 0 999px;border-right:0}.lang i:last-child{border-radius:0 999px 999px 0}
+.lang i.on{background:var(--fg);color:var(--ink);border-color:var(--fg)}
+.lang:hover i:not(.on){color:var(--fg);border-color:var(--ice)}
+main,footer{transition:opacity .22s}
+html.lswap main,html.lswap footer{opacity:0}
 
 /* ---------- boot loader ---------- */
 .boot{display:none}
@@ -311,10 +319,10 @@ html.warp body{animation:shake .5s 2}
   <div class="half a"></div><div class="half b"></div>
   <div class="boot-in">
     <p><span style="color:var(--ice)">&gt;</span> <span id="bootCmd"></span></p>
-    <p class="d">cargando experiencia <span id="bootPct">0</span>%</p>
+    <p class="d"><span data-i18n="boot.load">cargando experiencia</span> <span id="bootPct">0</span>%</p>
     <div class="boot-bar"><i></i></div>
   </div>
-  <div class="boot-skip">clic para saltar</div>
+  <div class="boot-skip" data-i18n="boot.skip">clic para saltar</div>
 </div>
 
 <div class="bg" aria-hidden="true">
@@ -332,11 +340,12 @@ html.warp body{animation:shake .5s 2}
   <div class="wrap">
     <a class="logo" href="#inicio" data-cursor="inicio"><b>~/</b>owen.olanda</a>
     <nav class="nav" aria-label="Secciones">
-      <a href="#trabajo">Trabajo</a>
-      <a href="#trayectoria">Trayectoria</a>
+      <a href="#trabajo" data-i18n="nav.work">Trabajo</a>
+      <a href="#trayectoria" data-i18n="nav.path">Trayectoria</a>
       <a href="#stack">Stack</a>
-      <a href="#sobre-mi">Sobre mí</a>
-      <a class="keep" href="#contacto">Contacto</a>
+      <a href="#sobre-mi" data-i18n="nav.about">Sobre mí</a>
+      <a class="keep" href="#contacto" data-i18n="nav.contact">Contacto</a>
+      <button class="lang" id="lang" type="button" data-cursor="es / en" aria-label="Cambiar idioma: español o inglés"><i data-l="es">ES</i><i data-l="en">EN</i></button>
     </nav>
   </div>
 </header>
@@ -344,44 +353,44 @@ html.warp body{animation:shake .5s 2}
 <main>
   <section class="hero" id="inicio">
     <div class="wrap">
-      <p class="eyebrow rv" style="--d:.05s">// desarrollador web y de software</p>
+      <p class="eyebrow rv" style="--d:.05s" data-i18n="hero.eyebrow">// desarrollador web y de software</p>
       <h1 class="name" aria-label="Owen Olanda"><span class="line" aria-hidden="true">Owen</span><span class="line" aria-hidden="true">Olanda</span></h1>
-      <p class="role rv" style="--d:.15s">Construyo <br class="br-m"><span class="rot" id="rot">sitios web</span><span class="caret" aria-hidden="true"></span></p>
-      <p class="summary rv" style="--d:.25s">Desarrollador web y de software con experiencia en sitios y blogs con PHP y MySQL, migraciones a Shopify con Python y herramientas internas. Enfocado en crear soluciones prácticas, seguras y bien documentadas para empresas.</p>
+      <p class="role rv" style="--d:.15s"><span data-i18n="hero.build">Construyo</span> <br class="br-m"><span class="rot" id="rot">sitios web</span><span class="caret" aria-hidden="true"></span></p>
+      <p class="summary rv" style="--d:.25s" data-i18n="hero.summary">Desarrollador web y de software con experiencia en sitios y blogs con PHP y MySQL, migraciones a Shopify con Python y herramientas internas. Enfocado en crear soluciones prácticas, seguras y bien documentadas para empresas.</p>
       <div class="ctas rv" style="--d:.35s">
-        <a class="btn primary magnet" href="#trabajo" data-cursor="ver">Ver mi trabajo
+        <a class="btn primary magnet" href="#trabajo" data-cursor="ver"><span data-i18n="cta.work">Ver mi trabajo</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         <button class="btn magnet copy-mail" type="button" data-cursor="copiar">owen.olanda@gmail.com</button>
       </div>
     </div>
     <div class="hero-foot">
-      <div class="wrap"><span>Cuautitlán, Edo. Méx.</span><a class="cue" href="#impacto" aria-label="Bajar a la siguiente sección">scroll <i></i></a></div>
+      <div class="wrap"><span data-i18n="hero.place">Cuautitlán, Edo. Méx.</span><a class="cue" href="#impacto" aria-label="Bajar a la siguiente sección">scroll <i></i></a></div>
     </div>
   </section>
 
   <section class="impact" id="impacto">
     <div class="wrap">
-      <p class="eyebrow rv">// impacto medible</p>
-      <h2 class="title rv" style="--d:.1s">Resultados que se pueden contar.</h2>
+      <p class="eyebrow rv" data-i18n="impact.eyebrow">// impacto medible</p>
+      <h2 class="title rv" style="--d:.1s" data-i18n="impact.title">Resultados que se pueden contar.</h2>
       <div class="stats">
         <div class="stat zero rv" style="--d:.05s">
           <div class="num"><span class="count" data-from="191" data-to="0">0</span></div>
-          <p>errores al migrar 191 productos y artículos a Shopify.</p>
+          <p data-i18n="impact.s1">errores al migrar 191 productos y artículos a Shopify.</p>
           <span class="src">Simple Clima</span>
         </div>
         <div class="stat rv" style="--d:.15s">
           <div class="num"><span class="count" data-to="80">80</span><span class="unit">%+</span></div>
-          <p>menos tiempo de carga en un visor de inventario: de ~8 a 1–2 minutos.</p>
+          <p data-i18n="impact.s2">menos tiempo de carga en un visor de inventario: de ~8 a 1–2 minutos.</p>
           <span class="src">Nube Digital</span>
         </div>
         <div class="stat rv" style="--d:.25s">
           <div class="num"><span class="count" data-to="500">500</span><span class="unit">+</span></div>
-          <p>donaciones procesadas en tiempo real durante un livestream.</p>
+          <p data-i18n="impact.s3">donaciones procesadas en tiempo real durante un livestream.</p>
           <span class="src">Freelance</span>
         </div>
         <div class="stat rv" style="--d:.35s">
           <div class="num"><span class="count" data-to="600">600</span><span class="unit">+</span></div>
-          <p>usuarios activos en un panel de estadísticas en tiempo real.</p>
+          <p data-i18n="impact.s4">usuarios activos en un panel de estadísticas en tiempo real.</p>
           <span class="src">Freelance</span>
         </div>
       </div>
@@ -392,62 +401,62 @@ html.warp body{animation:shake .5s 2}
     <div class="h-sticky">
       <div class="h-track" id="track">
         <div class="intro-panel">
-          <p class="eyebrow" style="margin:0">// trabajo</p>
-          <h2 class="title">Proyectos reales para empresas reales.</h2>
-          <p>Cuatro proyectos del servicio social y un año de herramientas para un creador de contenido en vivo. Cada tarjeta se puede tocar.</p>
-          <span class="hint">sigue bajando
+          <p class="eyebrow" style="margin:0" data-i18n="work.eyebrow">// trabajo</p>
+          <h2 class="title" data-i18n="work.title">Proyectos reales para empresas reales.</h2>
+          <p data-i18n="work.intro">Cuatro proyectos del servicio social y un año de herramientas para un creador de contenido en vivo. Cada tarjeta se puede tocar.</p>
+          <span class="hint"><span data-i18n="work.hint">sigue bajando</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"/></svg></span>
         </div>
 
         <article class="card">
-          <div class="tag"><span>Servicio social</span><span>2026</span></div>
+          <div class="tag"><span data-i18n="tag.social">Servicio social</span><span>2026</span></div>
           <h3>Simple Clima</h3>
-          <p>Migré 99 productos y 92 artículos a Shopify con Python y su API, con 0 errores. Implementé precios automáticos de USD a MXN y analítica de conversiones.</p>
-          <ul class="chips"><li>Python</li><li>Shopify API</li><li>Liquid</li><li>Analítica</li></ul>
+          <p data-i18n="sc.p">Migré 99 productos y 92 artículos a Shopify con Python y su API, con 0 errores. Implementé precios automáticos de USD a MXN y analítica de conversiones.</p>
+          <ul class="chips"><li>Python</li><li>Shopify API</li><li>Liquid</li><li data-i18n="chip.analytics">Analítica</li></ul>
           <div class="viz mig">
-            <span class="viz-cap">migración a shopify</span>
-            <div class="mig-row"><span>productos</span><span><b class="mc" data-to="99">99</b> / 99</span></div>
+            <span class="viz-cap" data-i18n="sc.cap">migración a shopify</span>
+            <div class="mig-row"><span data-i18n="sc.products">productos</span><span><b class="mc" data-to="99">99</b> / 99</span></div>
             <div class="bar"><i></i></div>
-            <div class="mig-row"><span>artículos</span><span><b class="mc" data-to="92">92</b> / 92</span></div>
+            <div class="mig-row"><span data-i18n="sc.articles">artículos</span><span><b class="mc" data-to="92">92</b> / 92</span></div>
             <div class="bar b2"><i></i></div>
-            <div class="mig-ok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>completado · 0 errores</div>
+            <div class="mig-ok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span data-i18n="mig.ok">completado · 0 errores</span></div>
           </div>
         </article>
 
         <article class="card">
-          <div class="tag"><span>Servicio social</span><span>2026</span></div>
+          <div class="tag"><span data-i18n="tag.social">Servicio social</span><span>2026</span></div>
           <h3>Nube Digital</h3>
-          <p>Reduje el tiempo de carga del visor de inventario de ~8 a 1–2 minutos y desarrollé un comparador entre los inventarios de Ingram y WHMCS.</p>
-          <ul class="chips"><li>WHMCS</li><li>Rendimiento</li><li>Integración</li></ul>
+          <p data-i18n="nd.p">Reduje el tiempo de carga del visor de inventario de ~8 a 1–2 minutos y desarrollé un comparador entre los inventarios de Ingram y WHMCS.</p>
+          <ul class="chips"><li>WHMCS</li><li data-i18n="chip.perf">Rendimiento</li><li data-i18n="chip.integration">Integración</li></ul>
           <div class="viz">
-            <span class="viz-cap">tiempo de carga del visor · escala 0–8 min</span>
+            <span class="viz-cap" data-i18n="nd.cap">tiempo de carga del visor · escala 0–8 min</span>
             <div class="race">
-              <span>antes</span><div class="bar before"><i></i></div><span class="t">~8 min</span>
-              <span>ahora</span><div class="bar after"><i></i></div><span class="t">1–2 min</span>
+              <span data-i18n="nd.before">antes</span><div class="bar before"><i></i></div><span class="t">~8 min</span>
+              <span data-i18n="nd.after">ahora</span><div class="bar after"><i></i></div><span class="t">1–2 min</span>
               <span></span><div class="axis"><span>0</span><span>4</span><span>8 min</span></div><span></span>
             </div>
-            <span class="win">más del 80% más rápido</span>
+            <span class="win" data-i18n="nd.win">más del 80% más rápido</span>
           </div>
         </article>
 
         <article class="card">
-          <div class="tag"><span>Servicio social</span><span>2026</span></div>
+          <div class="tag"><span data-i18n="tag.social">Servicio social</span><span>2026</span></div>
           <h3>Legal &amp; Digital</h3>
-          <p>Sitio corporativo responsivo en PHP y blog dinámico con MySQL, con consultas preparadas para prevenir inyección SQL.</p>
-          <ul class="chips"><li>PHP</li><li>MySQL</li><li>Seguridad web</li></ul>
+          <p data-i18n="ld.p">Sitio corporativo responsivo en PHP y blog dinámico con MySQL, con consultas preparadas para prevenir inyección SQL.</p>
+          <ul class="chips"><li>PHP</li><li>MySQL</li><li data-i18n="chip.websec">Seguridad web</li></ul>
           <div class="viz">
-            <span class="viz-cap">fragmento ilustrativo · consulta preparada</span>
-<pre class="code"><span class="ln c" style="--i:0;--len:32">// sin inyección SQL: parámetros</span><span class="ln" style="--i:1;--len:22"><span class="v">$stmt</span> = <span class="v">$pdo</span>-&gt;<span class="k">prepare</span>(</span><span class="ln" style="--i:2;--len:41">  <span class="s">'SELECT titulo FROM posts WHERE slug=?'</span></span><span class="ln" style="--i:3;--len:2">);</span><span class="ln" style="--i:4;--len:25"><span class="v">$stmt</span>-&gt;<span class="k">execute</span>([<span class="v">$slug</span>]);</span></pre>
+            <span class="viz-cap" data-i18n="ld.cap">fragmento ilustrativo · consulta preparada</span>
+<pre class="code"><span class="ln c" style="--i:0;--len:32">// sin inyección SQL: parámetros</span><span class="ln" style="--i:1;--len:22"><span class="v">$stmt</span> = <span class="v">$pdo</span>-&gt;<span class="k">prepare</span>(</span><span class="ln" style="--i:2;--len:41">  <span class="s" id="sql">'SELECT titulo FROM posts WHERE slug=?'</span></span><span class="ln" style="--i:3;--len:2">);</span><span class="ln" style="--i:4;--len:25"><span class="v">$stmt</span>-&gt;<span class="k">execute</span>([<span class="v">$slug</span>]);</span></pre>
           </div>
         </article>
 
         <article class="card">
-          <div class="tag"><span>Servicio social</span><span>2026</span></div>
+          <div class="tag"><span data-i18n="tag.social">Servicio social</span><span>2026</span></div>
           <h3>La Chapa de Madera</h3>
-          <p>Blog en PHP con paginación, buscador en tiempo real y posts populares; estandaricé la publicación de contenido en el CMS.</p>
-          <ul class="chips"><li>PHP</li><li>Búsqueda en tiempo real</li><li>CMS</li></ul>
+          <p data-i18n="cm.p">Blog en PHP con paginación, buscador en tiempo real y posts populares; estandaricé la publicación de contenido en el CMS.</p>
+          <ul class="chips"><li>PHP</li><li data-i18n="chip.search">Búsqueda en tiempo real</li><li>CMS</li></ul>
           <div class="viz">
-            <span class="viz-cap">pruébalo · buscador con títulos de ejemplo</span>
+            <span class="viz-cap" data-i18n="cm.cap">pruébalo · buscador con títulos de ejemplo</span>
             <label class="search" for="q">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
               <input id="q" type="search" placeholder="Busca en el blog…" autocomplete="off" aria-label="Buscar en el blog de ejemplo">
@@ -459,25 +468,25 @@ html.warp body{animation:shake .5s 2}
               <li>Tipos de corte en chapa</li>
               <li>Chapa de nogal: usos y acabados</li>
             </ul>
-            <div class="qmeta"><span id="qcount">5 resultados</span><span>tiempo real</span></div>
+            <div class="qmeta"><span id="qcount">5 resultados</span><span data-i18n="cm.rt">tiempo real</span></div>
           </div>
         </article>
 
         <article class="card">
           <div class="tag"><span>Freelance</span><span>2024 — 2025</span></div>
-          <h3>Herramientas para creador en vivo</h3>
+          <h3 data-i18n="lc.title">Herramientas para creador en vivo</h3>
           <ul class="mini">
-            <li>Gamificación con moneda virtual: <b>+10%</b> de interacción.</li>
-            <li>Panel en tiempo real para <b>600+</b> usuarios activos.</li>
-            <li>Automatización: <b>−50%</b> de intervención manual.</li>
-            <li>Ruleta con beneficios: hasta <b>+15%</b> de duración.</li>
+            <li data-i18n="lc.l1">Gamificación con moneda virtual: <b>+10%</b> de interacción.</li>
+            <li data-i18n="lc.l2">Panel en tiempo real para <b>600+</b> usuarios activos.</li>
+            <li data-i18n="lc.l3">Automatización: <b>−50%</b> de intervención manual.</li>
+            <li data-i18n="lc.l4">Ruleta con beneficios: hasta <b>+15%</b> de duración.</li>
           </ul>
           <div class="viz" style="position:relative">
-            <span class="viz-cap">pruébalo · temporizador extensible</span>
+            <span class="viz-cap" data-i18n="lc.cap">pruébalo · temporizador extensible</span>
             <div class="timer" id="timer" aria-live="off">01:00:00</div>
             <div class="toy-row">
-              <button class="btn magnet" id="donate" type="button" data-cursor="+30 s">Simular donación</button>
-              <span class="dons">donaciones: <b id="dons">0</b> · real: <b>500+</b></span>
+              <button class="btn magnet" id="donate" type="button" data-cursor="+30 s" data-i18n="lc.btn">Simular donación</button>
+              <span class="dons"><span data-i18n="dons">donaciones</span>: <b id="dons">0</b> · real: <b>500+</b></span>
             </div>
           </div>
         </article>
@@ -488,25 +497,25 @@ html.warp body{animation:shake .5s 2}
 
   <section class="path" id="trayectoria">
     <div class="wrap">
-      <p class="eyebrow rv">// trayectoria</p>
-      <h2 class="title rv" style="--d:.1s">De dónde vengo.</h2>
+      <p class="eyebrow rv" data-i18n="path.eyebrow">// trayectoria</p>
+      <h2 class="title rv" style="--d:.1s" data-i18n="path.title">De dónde vengo.</h2>
       <div class="tl" id="tl">
         <div class="tl-fill" aria-hidden="true"></div>
         <div class="tl-item rv">
           <span class="tl-when">Mar — Sep 2026</span>
-          <div><h3>Desarrollador · Servicio social</h3><p>Proyectos para Simple Clima, Nube Digital, Legal &amp; Digital y La Chapa de Madera: migraciones, optimización de rendimiento, sitios y blogs en PHP.</p></div>
+          <div><h3 data-i18n="path.h1">Desarrollador · Servicio social</h3><p data-i18n="path.p1">Proyectos para Simple Clima, Nube Digital, Legal &amp; Digital y La Chapa de Madera: migraciones, optimización de rendimiento, sitios y blogs en PHP.</p></div>
         </div>
         <div class="tl-item rv">
           <span class="tl-when">2024 — 2025</span>
-          <div><h3>Freelance · Herramientas para creador de contenido en vivo</h3><p>Gamificación, paneles de estadísticas en tiempo real, automatizaciones y un temporizador que se extendía con cada donación.</p></div>
+          <div><h3 data-i18n="path.h2">Freelance · Herramientas para creador de contenido en vivo</h3><p data-i18n="path.p2">Gamificación, paneles de estadísticas en tiempo real, automatizaciones y un temporizador que se extendía con cada donación.</p></div>
         </div>
         <div class="tl-item rv">
           <span class="tl-when">2020 — 2026</span>
-          <div><h3>Ingeniería en Sistemas Computacionales</h3><p>UNITEC — Universidad Tecnológica de México.</p><span class="pill">Egresado · Titulación en proceso</span></div>
+          <div><h3 data-i18n="path.h3">Ingeniería en Sistemas Computacionales</h3><p>UNITEC — Universidad Tecnológica de México.</p><span class="pill" data-i18n="path.pill">Egresado · Titulación en proceso</span></div>
         </div>
         <div class="tl-item rv">
-          <span class="tl-when">Cursos</span>
-          <div><h3>C++ desde cero · Ingeniería inversa con x64dbg</h3><p>Udemy.</p></div>
+          <span class="tl-when" data-i18n="path.courses">Cursos</span>
+          <div><h3 data-i18n="path.h4">C++ desde cero · Ingeniería inversa con x64dbg</h3><p>Udemy.</p></div>
         </div>
       </div>
     </div>
@@ -515,34 +524,34 @@ html.warp body{animation:shake .5s 2}
   <section class="stack" id="stack">
     <div class="wrap">
       <p class="eyebrow rv">// stack</p>
-      <h2 class="title rv" style="--d:.1s">Con lo que construyo.</h2>
+      <h2 class="title rv" style="--d:.1s" data-i18n="stack.title">Con lo que construyo.</h2>
     </div>
     <div class="mq-group">
-      <p class="mq-label">lenguajes<span class="drag-hint">· arrastra para moverlos</span></p>
+      <p class="mq-label" data-i18n="stack.l1">lenguajes<span class="drag-hint">· arrastra para moverlos</span></p>
       <div class="mq" data-cursor="arrastra" data-dir="-1"><div class="mq-track"><div class="mq-copy"><span class="chip">PHP</span><span class="chip">JavaScript</span><span class="chip">Python</span><span class="chip">SQL</span><span class="chip">C#</span><span class="chip">C/C++</span><span class="chip">Java</span><span class="chip">HTML</span><span class="chip">CSS</span></div></div></div>
-      <p class="mq-label">plataformas, datos y APIs</p>
+      <p class="mq-label" data-i18n="stack.l2">plataformas, datos y APIs</p>
       <div class="mq" data-cursor="arrastra" data-dir="1"><div class="mq-track"><div class="mq-copy"><span class="chip">Shopify (Liquid)</span><span class="chip">WHMCS</span><span class="chip">.NET Windows Forms</span><span class="chip">MySQL</span><span class="chip">SQL Server</span><span class="chip">MongoDB</span><span class="chip">REST</span><span class="chip">GraphQL</span><span class="chip">JSON</span></div></div></div>
-      <p class="mq-label">herramientas y prácticas</p>
-      <div class="mq" data-cursor="arrastra" data-dir="-1"><div class="mq-track"><div class="mq-copy"><span class="chip">Git/GitHub</span><span class="chip">Google Tag Manager</span><span class="chip">GA4</span><span class="chip">Google Apps Script</span><span class="chip">Visual Studio</span><span class="chip">x64dbg</span><span class="chip">Ubuntu</span><span class="chip">Diseño responsivo</span><span class="chip">SEO técnico</span><span class="chip">Seguridad web</span><span class="chip">Documentación técnica</span></div></div></div>
+      <p class="mq-label" data-i18n="stack.l3">herramientas y prácticas</p>
+      <div class="mq" data-cursor="arrastra" data-dir="-1"><div class="mq-track"><div class="mq-copy"><span class="chip">Git/GitHub</span><span class="chip">Google Tag Manager</span><span class="chip">GA4</span><span class="chip">Google Apps Script</span><span class="chip">Visual Studio</span><span class="chip">x64dbg</span><span class="chip">Ubuntu</span><span class="chip" data-i18n="chip.responsive">Diseño responsivo</span><span class="chip" data-i18n="chip.seo">SEO técnico</span><span class="chip" data-i18n="chip.websec">Seguridad web</span><span class="chip" data-i18n="chip.docs">Documentación técnica</span></div></div></div>
     </div>
     <div class="wrap">
       <div class="extras">
-        <div class="extra rv"><h3>idiomas</h3><p>Español nativo · Inglés B1</p></div>
-        <div class="extra rv" style="--d:.1s"><h3>competencias</h3><p>Autodidacta, perseverante y ordenado.</p></div>
+        <div class="extra rv"><h3 data-i18n="stack.langs">idiomas</h3><p data-i18n="stack.langsv">Español nativo · Inglés B1</p></div>
+        <div class="extra rv" style="--d:.1s"><h3 data-i18n="stack.skills">competencias</h3><p data-i18n="stack.skillsv">Autodidacta, perseverante y ordenado.</p></div>
       </div>
     </div>
   </section>
 
   <section class="about" id="sobre-mi">
     <div class="wrap">
-      <p class="eyebrow">// sobre mí</p>
+      <p class="eyebrow" data-i18n="about.eyebrow">// sobre mí</p>
       <p class="about-text" id="about">Aprendo por mi cuenta con los recursos que tengo a la mano en internet y nunca me rindo hasta alcanzar mi objetivo. Disfruto resolver problemas prácticos para personas y negocios, y me gusta ser ordenado. Fuera del código cuido mis hábitos: actividad física, buena alimentación, lectura, música, naturaleza y una inversión constante en mi desarrollo personal y mi mentalidad.</p>
     </div>
   </section>
 
   <section class="contact" id="contacto">
     <div class="wrap">
-      <p class="eyebrow rv">// contacto</p>
+      <p class="eyebrow rv" data-i18n="contact.eyebrow">// contacto</p>
       <h2 class="big" id="big" aria-label="Hablemos.">Hablemos.</h2>
       <div class="contact-row rv">
         <button class="btn primary magnet mail-big copy-mail" type="button" data-cursor="copiar">
@@ -552,7 +561,7 @@ html.warp body{animation:shake .5s 2}
         <a class="btn magnet" href="https://github.com/OwenOlanda" target="_blank" rel="noopener" data-cursor="abrir">GitHub</a>
         <a class="btn magnet" href="https://www.linkedin.com/in/owen-olanda/" target="_blank" rel="noopener" data-cursor="abrir">LinkedIn</a>
       </div>
-      <p class="contact-note">clic en el correo para copiarlo</p>
+      <p class="contact-note" data-i18n="contact.note">clic en el correo para copiarlo</p>
     </div>
   </section>
 </main>
@@ -560,7 +569,7 @@ html.warp body{animation:shake .5s 2}
 <footer>
   <div class="wrap">
     <button class="ns" type="button" id="ns" title="Pista: escríbelo en tu teclado">“Never Settle”</button>
-    <span>© 2026 Owen Olanda · hecho a mano, sin frameworks</span>
+    <span data-i18n="footer.made">© 2026 Owen Olanda · hecho a mano, sin frameworks</span>
   </div>
 </footer>
 
@@ -577,6 +586,51 @@ html.warp body{animation:shake .5s 2}
   function lerp(a,b,t){return a+(b-a)*t}
   var GLYPHS='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%/{}[]=+*';
   var EMAIL='owen.olanda@gmail.com';
+
+  /* ---------- language (ES / EN) ---------- */
+  var EN={"cta.work": "View my work", "work.hint": "keep scrolling", "mig.ok": "completed · 0 errors", "boot.load": "loading experience", "dons": "donations", "hero.build": "I build", "nav.work": "Work", "nav.path": "Experience", "nav.about": "About", "nav.contact": "Contact", "boot.skip": "click to skip", "hero.eyebrow": "// web &amp; software developer", "hero.summary": "Web and software developer with experience building sites and blogs with PHP and MySQL, Shopify migrations with Python, and internal tools. Focused on practical, secure, well-documented solutions for businesses.", "hero.place": "Cuautitlán, Mexico", "impact.eyebrow": "// measurable impact", "impact.title": "Results you can count.", "impact.s1": "errors migrating 191 products and articles to Shopify.", "impact.s2": "less load time on an inventory viewer: from ~8 to 1–2 minutes.", "impact.s3": "donations processed in real time during a livestream.", "impact.s4": "active users on a real-time stats dashboard.", "work.eyebrow": "// work", "work.title": "Real projects for real businesses.", "work.intro": "Four projects from my university social service and a year of tools for a live content creator. Every card is interactive.", "tag.social": "Social service", "sc.p": "I migrated 99 products and 92 articles to Shopify with Python and its API, with 0 errors. I set up automatic USD-to-MXN pricing and conversion analytics.", "chip.analytics": "Analytics", "sc.cap": "shopify migration", "sc.products": "products", "sc.articles": "articles", "nd.p": "I cut the inventory viewer’s load time from ~8 to 1–2 minutes and built a tool that compares the Ingram and WHMCS inventories.", "chip.perf": "Performance", "chip.integration": "Integration", "nd.cap": "viewer load time · 0–8 min scale", "nd.before": "before", "nd.after": "now", "nd.win": "over 80% faster", "ld.p": "Responsive corporate site in PHP and a dynamic MySQL blog, using prepared statements to prevent SQL injection.", "chip.websec": "Web security", "ld.cap": "illustrative snippet · prepared statement", "cm.p": "PHP blog with pagination, real-time search and popular posts; I standardized how content is published in the CMS.", "chip.search": "Real-time search", "cm.cap": "try it · search with sample titles", "cm.rt": "real time", "lc.title": "Tools for a live content creator", "lc.l1": "Gamification with a virtual currency: <b>+10%</b> engagement.", "lc.l2": "Real-time dashboard for <b>600+</b> active users.", "lc.l3": "Automation: <b>−50%</b> manual intervention.", "lc.l4": "Prize wheel with perks: up to <b>+15%</b> longer streams.", "lc.cap": "try it · extendable timer", "lc.btn": "Simulate donation", "path.eyebrow": "// experience", "path.title": "Where I come from.", "path.h1": "Developer · Social service", "path.p1": "Projects for Simple Clima, Nube Digital, Legal &amp; Digital and La Chapa de Madera: migrations, performance optimization, and PHP sites and blogs.", "path.h2": "Freelance · Tools for a live content creator", "path.p2": "Gamification, real-time stats dashboards, automations and a timer that extended with every donation.", "path.h3": "B.S. in Computer Systems Engineering", "path.pill": "Graduated · Degree in progress", "path.courses": "Courses", "path.h4": "C++ from scratch · Reverse engineering with x64dbg", "stack.title": "What I build with.", "stack.l1": "languages<span class=\"drag-hint\">· drag to move them</span>", "stack.l2": "platforms, data &amp; APIs", "stack.l3": "tools &amp; practices", "chip.responsive": "Responsive design", "chip.seo": "Technical SEO", "chip.docs": "Technical documentation", "stack.langs": "languages", "stack.langsv": "Spanish (native) · English (B1)", "stack.skills": "strengths", "stack.skillsv": "Self-taught, persistent and organized.", "about.eyebrow": "// about me", "contact.eyebrow": "// contact", "contact.note": "click the email to copy it", "footer.made": "© 2026 Owen Olanda · handmade, no frameworks"};
+  var ES={};
+  $$('[data-i18n]').forEach(function(el){ var k=el.getAttribute('data-i18n'); if(!(k in ES))ES[k]=el.innerHTML });
+  var TXT={
+    es:{copied:'Correo copiado: ',copyFail:'Selecciona y copia: ',ns1:'Pista: escríbelo con tu teclado… o toca dos veces más.',ns2:'Una más.',res1:' resultado',resN:' resultados',
+        big:'Hablemos.',code:'// sin inyección SQL: parámetros',sql:"'SELECT titulo FROM posts WHERE slug=?'",type:'chapa',navAria:'Secciones',cue:'Bajar a la siguiente sección',workAria:'Proyectos',q:'Busca en el blog…',qAria:'Buscar en el blog de ejemplo',nsTitle:'Pista: escríbelo en tu teclado',
+        desc:'Owen Olanda — desarrollador web y de software. PHP, MySQL, Shopify, Python y herramientas internas.',langAria:'Cambiar idioma: español o inglés',
+        rot:['sitios web','tiendas en línea','herramientas internas','automatizaciones','paneles en tiempo real','migraciones sin errores'],
+        posts:['Qué es la chapa de madera','Chapa natural vs. reconstituida','Cómo cuidar muebles enchapados','Tipos de corte en chapa','Chapa de nogal: usos y acabados'],
+        about:null, hl:['nunca','rindo','problemas','prácticos','ordenado.','desarrollo','personal'],
+        cur:{ver:'ver',copiar:'copiar',abrir:'abrir',inicio:'inicio',arrastra:'arrastra'}},
+    en:{copied:'Email copied: ',copyFail:'Select and copy: ',ns1:'Hint: type it on your keyboard… or tap twice more.',ns2:'One more.',res1:' result',resN:' results',
+        big:'Let’s talk.',code:'// no SQL injection: parameters',sql:"'SELECT title FROM posts WHERE slug=?'",type:'veneer',navAria:'Sections',cue:'Scroll to the next section',workAria:'Projects',q:'Search the blog…',qAria:'Search the sample blog',nsTitle:'Hint: type it on your keyboard',
+        desc:'Owen Olanda — web and software developer. PHP, MySQL, Shopify, Python and internal tools.',langAria:'Change language: Spanish or English',
+        rot:['websites','online stores','internal tools','automations','real-time dashboards','zero-error migrations'],
+        posts:['What is wood veneer','Natural vs. reconstituted veneer','How to care for veneered furniture','Types of veneer cuts','Walnut veneer: uses and finishes'],
+        about:'I teach myself with whatever resources I can find online, and I never give up until I reach my goal. I enjoy solving practical problems for people and businesses, and I like keeping things organized. Outside of code I take care of my habits: exercise, good nutrition, reading, music, nature and a steady investment in my personal growth and mindset.',
+        hl:['never','give','up','practical','problems','organized.','personal','growth'],
+        cur:{ver:'view',copiar:'copy',abrir:'open',inicio:'home',arrastra:'drag'}}
+  };
+  TXT.es.about=$('#about').textContent.trim();
+  var lang=(function(){
+    var q=null; try{q=new URLSearchParams(location.search).get('lang')}catch(e){}
+    if(q==='es'||q==='en')return q;
+    try{var sv=localStorage.getItem('oo-lang'); if(sv==='es'||sv==='en')return sv}catch(e){}
+    var nl=(navigator.languages&&navigator.languages[0])||navigator.language||'es';
+    return /^es\b/i.test(nl)?'es':'en';
+  })();
+  function L(k){return TXT[lang][k]}
+  var langHooks=[];
+  function applyStatic(){
+    var dict=lang==='en'?EN:ES;
+    $$('[data-i18n]').forEach(function(el){ var k=el.getAttribute('data-i18n'); if(k in dict&&el.innerHTML!==dict[k])el.innerHTML=dict[k] });
+    $$('[data-cursor]').forEach(function(el){ var o=el.getAttribute('data-cursor-es'); if(o===null){o=el.getAttribute('data-cursor');el.setAttribute('data-cursor-es',o)} var m=TXT[lang].cur[o]; if(m)el.setAttribute('data-cursor',m) });
+    root.lang=lang;
+    $('.nav').setAttribute('aria-label',L('navAria')); $('.cue').setAttribute('aria-label',L('cue')); $('#trabajo').setAttribute('aria-label',L('workAria'));
+    $('#q').placeholder=L('q'); $('#q').setAttribute('aria-label',L('qAria')); $('#ns').title=L('nsTitle'); $('#lang').setAttribute('aria-label',L('langAria'));
+    var md=$('meta[name="description"]'); if(md)md.setAttribute('content',L('desc'));
+    $$('#lang i').forEach(function(i){ var on=i.getAttribute('data-l')===lang; i.classList.toggle('on',on) });
+    var cl=$('.code .ln.c'); if(cl){cl.textContent=L('code');cl.style.setProperty('--len',L('code').length)}
+    var sq=$('#sql'); if(sq){sq.textContent=L('sql');sq.parentNode.style.setProperty('--len',L('sql').length+2)}
+  }
+  applyStatic();
 
   /* ---------- toast ---------- */
   var toastEl=$('#toast'), tt;
@@ -598,7 +652,9 @@ html.warp body{animation:shake .5s 2}
     return Array.prototype.map.call(t,function(ch){var s=d.createElement('span');s.className='ch';s.textContent=ch===' '?' ':ch;el.appendChild(s);return s});
   }
   var nameChars=[]; $$('.name .line').forEach(function(l){nameChars=nameChars.concat(splitChars(l))});
-  var bigChars=splitChars($('#big')); $$('#big .ch').forEach(function(s){s.setAttribute('aria-hidden','true')});
+  var bigChars=[];
+  function buildBig(){ var b=$('#big'); b.textContent=L('big'); b.setAttribute('aria-label',L('big')); bigChars=splitChars(b); bigChars.forEach(function(s){s.setAttribute('aria-hidden','true')}) }
+  buildBig();
 
   function scrambleIn(spans,delay){
     spans.forEach(function(s,i){
@@ -629,14 +685,14 @@ html.warp body{animation:shake .5s 2}
   }
 
   /* ---------- hero start ---------- */
-  var heroStarted=false;
+  var heroStarted=false, rotI=0;
   function startHero(){
     if(heroStarted)return; heroStarted=true;
     $$('#inicio .rv').forEach(function(e){e.classList.add('in')});
     if(reduce)return;
     scrambleIn(nameChars,0);
-    var words=['sitios web','tiendas en línea','herramientas internas','automatizaciones','paneles en tiempo real','migraciones sin errores'], wi=0, rot=$('#rot');
-    setInterval(function(){wi=(wi+1)%words.length;scrambleText(rot,words[wi])},2600);
+    var rot=$('#rot');
+    setInterval(function(){rotI=(rotI+1)%L('rot').length;scrambleText(rot,L('rot')[rotI])},2600);
   }
 
   /* ---------- boot loader ---------- */
@@ -690,8 +746,8 @@ html.warp body{animation:shake .5s 2}
 
   /* ---------- copy email ---------- */
   function copyMail(){
-    function ok(){toast('Correo copiado: '+EMAIL)}
-    function fail(){ var el=$('.mail-text'); try{var rg=d.createRange();rg.selectNodeContents(el);var sel=getSelection();sel.removeAllRanges();sel.addRange(rg)}catch(e){} toast('Selecciona y copia: '+EMAIL) }
+    function ok(){toast(L('copied')+EMAIL)}
+    function fail(){ var el=$('.mail-text'); try{var rg=d.createRange();rg.selectNodeContents(el);var sel=getSelection();sel.removeAllRanges();sel.addRange(rg)}catch(e){} toast(L('copyFail')+EMAIL) }
     try{ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(EMAIL).then(ok,fail)} else fail() }catch(e){fail()}
   }
   $$('.copy-mail').forEach(function(b){b.addEventListener('click',function(e){copyMail(); var r=b.getBoundingClientRect(); burst(r.left+r.width/2,r.top+r.height/2,26)})});
@@ -727,11 +783,11 @@ html.warp body{animation:shake .5s 2}
       var i=t?li._k.indexOf(t):0, hit=!t||i>-1; li.hidden=!hit;
       if(hit){n++; li.innerHTML=t?esc(li._t.slice(0,i))+'<mark>'+esc(li._t.slice(i,i+t.length))+'</mark>'+esc(li._t.slice(i+t.length)):esc(li._t)}
     });
-    qc.textContent=n+(n===1?' resultado':' resultados');
+    qc.textContent=n+(n===1?L('res1'):L('resN'));
   }
   q.addEventListener('input',function(){touched=true;runSearch()});
   function autoType(){
-    if(reduce)return; var word='chapa', i=0;
+    if(reduce)return; var word=L('type'), i=0;
     setTimeout(function typ(){ if(touched)return; i++; q.value=word.slice(0,i); runSearch(); if(i<word.length)setTimeout(typ,140); else setTimeout(function(){ if(!touched){q.value='';runSearch()} },2200) },700);
   }
 
@@ -781,9 +837,9 @@ html.warp body{animation:shake .5s 2}
 
   /* ---------- word scrub ---------- */
   var about=$('#about'), words=[];
-  (function(){ var t=about.textContent.trim().split(/\s+/); about.textContent='';
-    var hl=['nunca','rindo','problemas','prácticos','ordenado.','desarrollo','personal'];
-    t.forEach(function(w,i){ var s=d.createElement('span'); s.className='w'+(hl.indexOf(w.replace(/[,:]/g,''))>-1||hl.indexOf(w)>-1?' hl':''); s.textContent=w; about.appendChild(s); if(i<t.length-1)about.appendChild(d.createTextNode(' ')); words.push(s) }) })();
+  function buildAbout(){ var ws=L('about').split(/\s+/), hl=L('hl'); about.textContent=''; words=[];
+    ws.forEach(function(w,i){ var s=d.createElement('span'); s.className='w'+(hl.indexOf(w.replace(/[,:]/g,''))>-1||hl.indexOf(w)>-1?' hl':''); s.textContent=w; about.appendChild(s); if(i<ws.length-1)about.appendChild(d.createTextNode(' ')); words.push(s) }) }
+  buildAbout();
 
   /* ---------- particles ---------- */
   var cv=$('#fx'), ctx=cv.getContext('2d'), parts=[], dpr=1, COLORS=['#8FB4FF','#F2A1B5','#EEF2FA'];
@@ -852,7 +908,25 @@ html.warp body{animation:shake .5s 2}
   var buf='', nsTaps=0, nsT;
   function warp(){ if(root.classList.contains('warp'))return; root.classList.add('warp'); try{v.playbackRate=6}catch(e){} for(var i=0;i<5;i++)(function(i){setTimeout(function(){burst(Math.random()*innerWidth,Math.random()*innerHeight*.8,40)},i*160)})(i); toast('Never Settle.'); setTimeout(function(){root.classList.remove('warp');try{v.playbackRate=1}catch(e){}},2800) }
   d.addEventListener('keydown',function(e){ if(e.target.closest&&e.target.closest('input,textarea'))return; if(e.key&&e.key.length===1){ buf=(buf+e.key.toLowerCase()).slice(-24); if(buf.replace(/[^a-z]/g,'').slice(-11)==='neversettle'){buf='';warp()} } });
-  $('#ns').addEventListener('click',function(){ nsTaps++; clearTimeout(nsT); nsT=setTimeout(function(){nsTaps=0},1200); if(nsTaps>=3){nsTaps=0;warp()} else toast(nsTaps===1?'Pista: escríbelo con tu teclado… o toca dos veces más.':'Una más.') });
+  $('#ns').addEventListener('click',function(){ nsTaps++; clearTimeout(nsT); nsT=setTimeout(function(){nsTaps=0},1200); if(nsTaps>=3){nsTaps=0;warp()} else toast(nsTaps===1?L('ns1'):L('ns2')) });
+
+
+  /* ---------- language switch ---------- */
+  function relabelPosts(){ var ps=L('posts'); posts.forEach(function(li,i){ li._t=ps[i]; li._k=norm(ps[i]) }); runSearch() }
+  function setLang(l,save){
+    if(l===lang)return; lang=l;
+    if(save){ try{localStorage.setItem('oo-lang',l)}catch(e){} try{var u=new URL(location.href); u.searchParams.set('lang',l); history.replaceState(null,'',u)}catch(e){} }
+    function swap(){
+      applyStatic(); buildAbout(); buildBig(); relabelPosts();
+      cancelAnimationFrame($('#rot')._raf); $('#rot').textContent=L('rot')[rotI%L('rot').length];
+      onResize();
+    }
+    if(reduce){swap();return}
+    root.classList.add('lswap'); setTimeout(function(){ swap(); root.classList.remove('lswap') },230);
+  }
+  $('#lang').addEventListener('click',function(){ setLang(lang==='es'?'en':'es',true) });
+  // first paint: generated text in the starting language
+  relabelPosts(); $('#rot').textContent=L('rot')[0];
 
   /* ---------- init ---------- */
   function onResize(){ sizeCanvas(); sizePin(); sizeTl(); onScroll() }
