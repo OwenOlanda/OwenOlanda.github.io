@@ -300,7 +300,8 @@ html.js:not(.rm) .about-text .w.hl.lit{color:var(--ice)}
 .big .ch{transition:transform .5s cubic-bezier(.2,.7,.2,1),color .3s}
 .big:hover .ch{color:var(--ice)}
 .contact-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
-.mail-big{font-family:var(--display);font-size:clamp(20px,2.6vw,32px);min-height:64px;padding:0 28px}
+.mail-big{font-family:var(--display);font-size:clamp(17px,2.6vw,32px);min-height:64px;padding:0 clamp(20px,4vw,28px);max-width:100%}
+.mail-big .mail-text{overflow-wrap:anywhere}
 .mail-big .ic{width:20px;height:20px}
 .contact-note{margin:20px 0 0;font-family:var(--mono);font-size:12px;color:var(--faint)}
 footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:40px}
@@ -369,7 +370,7 @@ html.warp body{animation:shake .5s 2}
       <div class="ctas rv" style="--d:.35s">
         <a class="btn primary magnet" href="#trabajo" data-cursor="ver"><span data-i18n="cta.work">Ver mi trabajo</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        <button class="btn magnet copy-mail" type="button" data-cursor="copiar">owen.olanda@gmail.com</button>
+        <button class="btn magnet copy-mail" type="button" data-cursor="copiar">contacto@owenolanda.com</button>
       </div>
     </div>
     <div class="hero-foot">
@@ -565,7 +566,7 @@ html.warp body{animation:shake .5s 2}
       <div class="contact-row rv">
         <button class="btn primary magnet mail-big copy-mail" type="button" data-cursor="copiar">
           <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
-          <span class="mail-text">owen.olanda@gmail.com</span>
+          <span class="mail-text">contacto@owenolanda.com</span>
         </button>
         <a class="btn magnet" href="https://github.com/OwenOlanda" target="_blank" rel="noopener" data-cursor="abrir">GitHub</a>
         <a class="btn magnet" href="https://www.linkedin.com/in/owen-olanda/" target="_blank" rel="noopener" data-cursor="abrir">LinkedIn</a>
@@ -594,7 +595,7 @@ html.warp body{animation:shake .5s 2}
   function clamp(v,a,b){return Math.min(b,Math.max(a,v))}
   function lerp(a,b,t){return a+(b-a)*t}
   var GLYPHS='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%/{}[]=+*';
-  var EMAIL='owen.olanda@gmail.com';
+  var EMAIL='contacto@owenolanda.com';
 
   /* ---------- language (ES / EN) ---------- */
   var EN={"cta.work": "View my work", "work.hint": "keep scrolling", "mig.ok": "completed · 0 errors", "boot.load": "loading experience", "dons": "donations", "hero.build": "I build", "nav.work": "Work", "nav.path": "Experience", "nav.about": "About", "nav.contact": "Contact", "boot.skip": "click to skip", "hero.eyebrow": "// web &amp; software developer", "hero.summary": "Web and software developer with experience building sites and blogs with PHP and MySQL, Shopify migrations with Python, and internal tools. Focused on practical, secure, well-documented solutions for businesses.", "hero.place": "Cuautitlán, Mexico", "impact.eyebrow": "// measurable impact", "impact.title": "Results you can count.", "impact.s1": "errors migrating 191 products and articles to Shopify.", "impact.s2": "less load time on an inventory viewer: from ~8 to 1–2 minutes.", "impact.s3": "donations processed in real time during a livestream.", "impact.s4": "active users on a real-time stats dashboard.", "work.eyebrow": "// work", "work.title": "Real projects for real businesses.", "work.intro": "Four projects from my university social service and a year of tools for a live content creator. Every card is interactive.", "tag.social": "Social service", "sc.p": "I migrated 99 products and 92 articles to Shopify with Python and its API, with 0 errors. I set up automatic USD-to-MXN pricing and conversion analytics.", "chip.analytics": "Analytics", "sc.cap": "shopify migration", "sc.products": "products", "sc.articles": "articles", "nd.p": "I cut the inventory viewer’s load time from ~8 to 1–2 minutes and built a tool that compares the Ingram and WHMCS inventories.", "chip.perf": "Performance", "chip.integration": "Integration", "nd.cap": "viewer load time · 0–8 min scale", "nd.before": "before", "nd.after": "now", "nd.win": "over 80% faster", "ld.p": "Responsive corporate site in PHP and a dynamic MySQL blog, using prepared statements to prevent SQL injection.", "chip.websec": "Web security", "ld.cap": "illustrative snippet · prepared statement", "cm.p": "PHP blog with pagination, real-time search and popular posts; I standardized how content is published in the CMS.", "chip.search": "Real-time search", "cm.cap": "try it · search with sample titles", "cm.rt": "real time", "lc.title": "Tools for a live content creator", "lc.l1": "Gamification with a virtual currency: <b>+10%</b> engagement.", "lc.l2": "Real-time dashboard for <b>600+</b> active users.", "lc.l3": "Automation: <b>−50%</b> manual intervention.", "lc.l4": "Prize wheel with perks: up to <b>+15%</b> longer streams.", "lc.cap": "try it · extendable timer", "lc.btn": "Simulate donation", "path.eyebrow": "// experience", "path.title": "Where I come from.", "path.h1": "Developer · Social service", "path.p1": "Projects for Simple Clima, Nube Digital, Legal &amp; Digital and La Chapa de Madera: migrations, performance optimization, and PHP sites and blogs.", "path.h2": "Freelance · Tools for a live content creator", "path.p2": "Gamification, real-time stats dashboards, automations and a timer that extended with every donation.", "path.h3": "B.S. in Computer Systems Engineering", "path.pill": "Graduated · Degree in progress", "path.courses": "Courses", "path.h4": "C++ from scratch · Reverse engineering with x64dbg", "stack.title": "What I build with.", "stack.l1": "languages<span class=\"drag-hint\">· drag to move them</span>", "stack.l2": "platforms, data &amp; APIs", "stack.l3": "tools &amp; practices", "chip.responsive": "Responsive design", "chip.seo": "Technical SEO", "chip.docs": "Technical documentation", "stack.langs": "languages", "stack.langsv": "Spanish (native) · English (B1)", "stack.skills": "strengths", "stack.skillsv": "Self-taught, persistent and organized.", "about.eyebrow": "// about me", "contact.eyebrow": "// contact", "contact.note": "click the email to copy it", "footer.made": "© 2026 Owen Olanda · handmade, no frameworks"};
